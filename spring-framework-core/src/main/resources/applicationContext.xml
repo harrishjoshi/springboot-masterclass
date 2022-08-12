@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- bean definitions here -->
+    <bean id="principal" class="com.harxsh.xml.Principal">
+        <property name="name" value="John Doe" />
+        <property name="subject" ref="subject" />
+    </bean>
+
+    <bean id="subject" class="com.harxsh.xml.Subject">
+        <property name="name" value="Java" />
+        <property name="creditHours" value="4.0" />
+    </bean>
+
+    <bean id="teacher" class="com.harxsh.xml.Teacher">
+        <constructor-arg name="name" value="Harish" />
+        <constructor-arg name="subject" ref="subject" />
+    </bean>
+
+    <!-- compoent scan -->
+    <!--<context:component-scan base-package="com.harxsh.xml" />-->
+</beans>
