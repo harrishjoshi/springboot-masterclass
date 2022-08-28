@@ -1,6 +1,7 @@
 package com.harxsh.spring.rest.api.service;
 
 import com.harxsh.spring.rest.api.entity.Student;
+import com.harxsh.spring.rest.api.exception.StudentNotFoundException;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public interface StudentService {
 
     List<Student> fetchStudents();
 
-    Student findStudentById(Long id);
+    Student findStudentById(Long id) throws StudentNotFoundException;
 
     void deleteStudentById(Long id);
 

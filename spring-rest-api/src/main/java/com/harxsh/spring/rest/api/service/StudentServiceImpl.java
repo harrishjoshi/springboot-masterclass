@@ -1,12 +1,14 @@
 package com.harxsh.spring.rest.api.service;
 
 import com.harxsh.spring.rest.api.entity.Student;
+import com.harxsh.spring.rest.api.exception.StudentNotFoundException;
 import com.harxsh.spring.rest.api.repository.StudentRepository;
 import com.harxsh.spring.rest.api.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +27,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student findStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Student findStudentById(Long id) throws StudentNotFoundException {
+        Optional<Student> student = studentRepository.findById(id);
+
+        if (student.isEmpty())
+            throw new StudentNotFoundException("Student with id " + id + " not found.");
+
+        return student.get();
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.harxsh.spring.rest.api.controller.v2;
 
 import com.harxsh.spring.rest.api.entity.Student;
+import com.harxsh.spring.rest.api.exception.StudentNotFoundException;
 import com.harxsh.spring.rest.api.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +20,12 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @PostMapping("add")
     public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
         try {
+            logger.info("Inside student add.");
             studentService.addStudent(student);
             return new ResponseEntity<>(student, HttpStatus.OK);
         } catch (Exception e) {
@@ -31,6 +37,7 @@ public class StudentController {
     @GetMapping("")
     public ResponseEntity<List<Student>> fetchStudents() {
         try {
+            logger.info("Inside student fetch.");
             List<Student> students = studentService.fetchStudents();
             return new ResponseEntity<>(
                     students,
@@ -43,17 +50,8 @@ public class StudentController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> findStudentById(@PathVariable Long id) {
-        try {
-            Student student = studentService.findStudentById(id);
-            return new ResponseEntity<>(
-                    student,
-                    student == null ? HttpStatus.NOT_FOUND : HttpStatus.OK
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public Student findStudentById(@PathVariable Long id) throws StudentNotFoundException {
+        return studentService.findStudentById(id);
     }
 
     @DeleteMapping("{id}/delete")
