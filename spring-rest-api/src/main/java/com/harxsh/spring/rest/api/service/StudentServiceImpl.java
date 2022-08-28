@@ -46,4 +46,9 @@ public class StudentServiceImpl implements StudentService {
 
         return existingStudent;
     }
+
+    @Override
+    public List<Student> findByName(String name) {
+        return studentRepository.findByNameIgnoreCase(name);
+    }
 }

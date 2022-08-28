@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController("v2.StudentController")
@@ -17,7 +18,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping("add")
-    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
         try {
             studentService.addStudent(student);
             return new ResponseEntity<>(student, HttpStatus.OK);
@@ -67,7 +68,7 @@ public class StudentController {
     }
 
     @PutMapping("{id}/update")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @Valid @RequestBody Student student) {
         try {
             Student updatedStudent = studentService.updateStudentById(id, student);
             return new ResponseEntity<>(
@@ -78,5 +79,10 @@ public class StudentController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("find-by-name")
+    public List<Student> fetchByName(@RequestParam String name) {
+        return studentService.findByName(name);
     }
 }
