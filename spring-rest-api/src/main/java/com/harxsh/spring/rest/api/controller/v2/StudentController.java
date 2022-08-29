@@ -3,6 +3,7 @@ package com.harxsh.spring.rest.api.controller.v2;
 import com.harxsh.spring.rest.api.entity.Student;
 import com.harxsh.spring.rest.api.exception.StudentNotFoundException;
 import com.harxsh.spring.rest.api.service.StudentService;
+import com.harxsh.spring.rest.api.util.StudentUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,7 @@ public class StudentController {
     public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
         try {
             logger.info("Inside student add.");
-            studentService.addStudent(student);
-            return new ResponseEntity<>(student, HttpStatus.OK);
+            return new ResponseEntity<>(studentService.addStudent(student), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -50,8 +50,8 @@ public class StudentController {
     }
 
     @GetMapping("{id}")
-    public Student findStudentById(@PathVariable Long id) throws StudentNotFoundException {
-        return studentService.findStudentById(id);
+    public Student fetchStudentById(@PathVariable Long id) throws StudentNotFoundException {
+        return studentService.fetchStudentById(id);
     }
 
     @DeleteMapping("{id}/delete")
@@ -80,7 +80,29 @@ public class StudentController {
     }
 
     @GetMapping("find-by-name")
-    public List<Student> fetchByName(@RequestParam String name) {
-        return studentService.findByName(name);
+    public ResponseEntity<List<Student>> fetchStudentsByName(@RequestParam String name) {
+        try {
+            List<Student> studentsByName = studentService.fetchAllByName(name);
+            return new ResponseEntity<>(
+                    studentsByName,
+                    StudentUtil.isNotNullAndEmpty(studentsByName) ? HttpStatus.OK : HttpStatus.NOT_FOUND
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("find-first-by-name")
+    public ResponseEntity<Student> fetchFirstByName(@RequestParam String name) {
+        try {
+            Student studentsByName = studentService.fetchFirstByName(name);
+            return new ResponseEntity<>(
+                    studentsByName, studentsByName == null ? HttpStatus.NOT_FOUND : HttpStatus.OK
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

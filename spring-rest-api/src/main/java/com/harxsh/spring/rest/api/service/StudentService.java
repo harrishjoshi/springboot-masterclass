@@ -6,15 +6,17 @@ import com.harxsh.spring.rest.api.exception.StudentNotFoundException;
 import java.util.List;
 
 public interface StudentService {
-    void addStudent(Student student);
+    Student addStudent(Student student);
 
     List<Student> fetchStudents();
 
-    Student findStudentById(Long id) throws StudentNotFoundException;
+    Student fetchStudentById(Long id) throws StudentNotFoundException;
 
     void deleteStudentById(Long id);
 
     Student updateStudentById(Long id, Student student);
 
-    List<Student> findByName(String name);
+    List<Student> fetchAllByName(String name);
+
+    Student fetchFirstByName(String name);
 }
