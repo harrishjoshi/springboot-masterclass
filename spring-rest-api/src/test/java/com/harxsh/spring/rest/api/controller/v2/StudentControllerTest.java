@@ -47,7 +47,7 @@ class StudentControllerTest {
         Mockito.when(studentService.addStudent(inputStudent))
                 .thenReturn(student);
 
-        mockMvc.perform(post("/add")
+        mockMvc.perform(post("/api/v2/students/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -65,7 +65,7 @@ class StudentControllerTest {
     void fetchStudentById() throws Exception {
         Mockito.when(studentService.fetchStudentById(1L))
                 .thenReturn(student);
-        mockMvc.perform(post("/add")
+        mockMvc.perform(post("/api/v2/students/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
