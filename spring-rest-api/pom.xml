@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.harxsh</groupId>
 	<artifactId>spring-rest-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>spring-rest-api</name>
 	<description>Demo project for Spring Boot Rest API</description>
 	<properties>
@@ -53,6 +53,10 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
