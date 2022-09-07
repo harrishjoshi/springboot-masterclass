@@ -1,18 +1,22 @@
 package com.harxsh.spring.data.jpa.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "tbl_guardian")
+@Table(
+        name = "tbl_guardian",
+        uniqueConstraints = @UniqueConstraint(
+                name = "unique_email",
+                columnNames = "email_address"
+        ))
 public class Guardian {
 
     @Id
@@ -28,9 +32,14 @@ public class Guardian {
     private Long id;
     private String firstName;
     private String lastName;
+    @Column(
+            name = "email_address",
+            nullable = false
+    )
     private String email;
     private String phone;
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 }
