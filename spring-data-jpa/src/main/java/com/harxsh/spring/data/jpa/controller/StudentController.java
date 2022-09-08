@@ -26,34 +26,40 @@ public class StudentController {
     public ResponseEntity<Response> addStudent(@RequestBody String payload) {
         String message;
         HttpStatus status;
-        Student student = null;
+        Student student;
 
         try {
             // get json object from payload
             JSONObject jsonObject = new JSONObject(payload);
 
-            // student related data
-            student = new Student();
-            student.setEmail(jsonObject.getString("email"));
-            student.setFirstName(jsonObject.getString("firstName"));
-            student.setLastName(jsonObject.getString("lastName"));
+            // set student related data
+            student = Student.builder()
+                    .email(jsonObject.getString("email"))
+                    .firstName(jsonObject.getString("firstName"))
+                    .lastName(jsonObject.getString("lastName"))
+                    .build();
 
             // student's guardian related data
             List<Guardian> guardians = new ArrayList<>();
             for (Object obj : jsonObject.getJSONArray("guardians")) {
                 JSONObject object = new JSONObject(obj.toString());
-                Guardian guardian = new Guardian();
-                guardian.setEmail(object.getString("email"));
-                guardian.setFirstName(object.getString("firstName"));
-                guardian.setLastName(object.getString("lastName"));
-                guardian.setPhone(object.getString("phone"));
-                guardian.setStudent(student);
+
+                // set guardian related data
+                Guardian guardian = Guardian.builder()
+                        .email(object.getString("email"))
+                        .firstName(object.getString("firstName"))
+                        .lastName(object.getString("lastName"))
+                        .phone(object.getString("phone"))
+                        .student(student)
+                        .build();
+
+                // add guardian data to list
                 guardians.add(guardian);
             }
 
             student.setGuardians(guardians);
             student = studentService.addStudent(student);
-            message = "Student save successfully.";
+            message = "Student saved successfully.";
             status = HttpStatus.OK;
         } catch (Exception e) {
             student = null;
@@ -112,5 +118,70 @@ public class StudentController {
         }
 
         return new ResponseEntity<>(new Response(message, student), status);
+    }
+
+    @PutMapping(value = "update/{id}", consumes = "application/json")
+    public ResponseEntity<Response> updateStudent(
+            @PathVariable("id") Long studentId,
+            @RequestBody String payload
+    ) {
+        String message;
+        HttpStatus status;
+        Student student = null;
+
+        try {
+            Student existingStudent = studentService.findById(studentId);
+            if (existingStudent != null) {
+                // get json object from payload
+                JSONObject jsonObject = new JSONObject(payload);
+
+                // set student related data
+                student = Student.builder()
+                        .id(existingStudent.getId())
+                        .email(jsonObject.getString("email"))
+                        .firstName(jsonObject.getString("firstName"))
+                        .lastName(jsonObject.getString("lastName"))
+                        .guardians(existingStudent.getGuardians())
+                        .build();
+
+                student = studentService.addStudent(student);
+                message = "Student with id: " + studentId + " updated successfully.";
+                status = HttpStatus.OK;
+            } else {
+                status = HttpStatus.NOT_FOUND;
+                message = "Student data with id: " + studentId + " not found.";
+            }
+        } catch (Exception e) {
+            student = null;
+            e.printStackTrace();
+            message = "Failed to update student with id: " + studentId;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new Response(message, student), status);
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Response> deleteById(@PathVariable("id") Long studentId) {
+        String message;
+        HttpStatus status;
+
+        try {
+            Student student = studentService.findById(studentId);
+            if (student != null) {
+                studentService.deleteById(studentId);
+                status = HttpStatus.OK;
+                message = "Student with id: " + studentId + " deleted successfully.";
+            } else {
+                status = HttpStatus.NOT_FOUND;
+                message = "Student data with id: " + studentId + " not found.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "Failed to delete student with id: " + studentId;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new Response(message, null), status);
     }
 }

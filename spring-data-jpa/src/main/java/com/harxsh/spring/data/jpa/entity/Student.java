@@ -38,6 +38,6 @@ public class Student {
             nullable = false
     )
     private String email;
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     List<Guardian> guardians;
 }
