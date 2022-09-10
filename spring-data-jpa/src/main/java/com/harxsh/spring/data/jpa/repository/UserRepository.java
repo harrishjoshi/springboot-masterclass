@@ -2,6 +2,7 @@ package com.harxsh.spring.data.jpa.repository;
 
 import com.harxsh.spring.data.jpa.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByLastNameNotNull();
 
     List<User> findByAddressTemp(String temp);
+
+    @Query("select u.firstName from User u where u.email = ?1")
+    String findUserFirstNameByEmail(String email);
 }

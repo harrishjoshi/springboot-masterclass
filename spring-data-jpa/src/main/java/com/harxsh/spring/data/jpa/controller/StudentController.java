@@ -1,5 +1,6 @@
 package com.harxsh.spring.data.jpa.controller;
 
+import com.harxsh.spring.data.jpa.controller.util.StudentUtil;
 import com.harxsh.spring.data.jpa.entity.Guardian;
 import com.harxsh.spring.data.jpa.entity.Response;
 import com.harxsh.spring.data.jpa.entity.Student;
@@ -106,10 +107,10 @@ public class StudentController {
             student = studentService.findById(studentId);
             if (student != null) {
                 status = HttpStatus.OK;
-                message = "Student data with id: " + studentId + " fetched successfully.";
+                message = StudentUtil.getFetchMessage("id", studentId);
             } else {
                 status = HttpStatus.NOT_FOUND;
-                message = "Student data with id: " + studentId + " not found.";
+                message = StudentUtil.dataNotFoundMessage("id", studentId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,7 +150,7 @@ public class StudentController {
                 status = HttpStatus.OK;
             } else {
                 status = HttpStatus.NOT_FOUND;
-                message = "Student data with id: " + studentId + " not found.";
+                message = StudentUtil.dataNotFoundMessage("id", studentId);
             }
         } catch (Exception e) {
             student = null;
@@ -174,7 +175,7 @@ public class StudentController {
                 message = "Student with id: " + studentId + " deleted successfully.";
             } else {
                 status = HttpStatus.NOT_FOUND;
-                message = "Student data with id: " + studentId + " not found.";
+                message = StudentUtil.dataNotFoundMessage("id", studentId);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,5 +184,77 @@ public class StudentController {
         }
 
         return new ResponseEntity<>(new Response(message, null), status);
+    }
+
+    @GetMapping("find-by-email")
+    public ResponseEntity<Response> findByEmail(@RequestParam String email) {
+        String message;
+        HttpStatus status;
+        Student student = null;
+
+        try {
+            student = studentService.findStudentByEmail(email);
+            if (student != null) {
+                status = HttpStatus.OK;
+                message = StudentUtil.getFetchMessage("email", email);
+            } else {
+                status = HttpStatus.NOT_FOUND;
+                message = StudentUtil.dataNotFoundMessage("email", email);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "Failed to fetch student data with email: " + email;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new Response(message, student), status);
+    }
+
+    @GetMapping("find-by-guardian-email")
+    public ResponseEntity<Response> findByGuardianEmail(@RequestParam String email) {
+        String message;
+        HttpStatus status;
+        Student student = null;
+
+        try {
+            student = studentService.findStudentByGuardianEmail(email);
+            if (student != null) {
+                status = HttpStatus.OK;
+                message = "Student data with guardian email: '" + email + "' fetched successfully.";
+            } else {
+                status = HttpStatus.NOT_FOUND;
+                message = "Student data with guardian email: '" + email + "' not found.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "Failed to fetch student data with guardian email: " + email;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new Response(message, student), status);
+    }
+
+    @GetMapping("find-by-guardian-id")
+    public ResponseEntity<Response> findByGuardianEmail(@RequestParam Long id) {
+        String message;
+        HttpStatus status;
+        Student student = null;
+
+        try {
+            student = studentService.findStudentByGuardianEmail(id);
+            if (student != null) {
+                status = HttpStatus.OK;
+                message = "Student data with guardian id: " + id + " fetched successfully.";
+            } else {
+                status = HttpStatus.NOT_FOUND;
+                message = "Student data with guardian id: " + id + " not found.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "Failed to fetch student data with guardian id: " + id;
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new Response(message, student), status);
     }
 }

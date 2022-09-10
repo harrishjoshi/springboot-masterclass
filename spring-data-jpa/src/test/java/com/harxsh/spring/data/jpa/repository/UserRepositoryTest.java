@@ -77,4 +77,10 @@ class UserRepositoryTest {
         List<User> users = userRepository.findByAddressTemp("ktm");
         log.info("Users: {}", users);
     }
+
+    @Test
+    void printUserFirstNameByEmail() {
+        String firstName = userRepository.findUserFirstNameByEmail("joshiharish@gmail.com");
+        log.info("User First Name: {}", firstName);
+    }
 }

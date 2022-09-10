@@ -28,4 +28,16 @@ public class StudentService {
     public void deleteById(Long studentId) {
         studentRepository.deleteById(studentId);
     }
+
+    public Student findStudentByEmail(String email) {
+        return studentRepository.findStudentByEmail(email);
+    }
+
+    public Student findStudentByGuardianEmail(String email) {
+        return studentRepository.findStudentByGuardianEmail(email);
+    }
+
+    public Student findStudentByGuardianEmail(Long id) {
+        return studentRepository.findStudentByGuardianId(id);
+    }
 }
