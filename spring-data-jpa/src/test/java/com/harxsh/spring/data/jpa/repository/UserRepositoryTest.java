@@ -83,4 +83,9 @@ class UserRepositoryTest {
         String firstName = userRepository.findUserFirstNameByEmail("joshiharish@gmail.com");
         log.info("User First Name: {}", firstName);
     }
+
+    @Test
+    void updateUserNameByEmail() {
+        userRepository.updateUserNameByEmail("Harxsh", "harishjoshi@gmail.com");
+    }
 }
