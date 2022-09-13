@@ -3,6 +3,8 @@ package com.harxsh.spring.data.jpa.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -34,4 +36,23 @@ public class Homework {
             referencedColumnName = "id"
     )
     private Tutor tutor;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "tbl_student_homework",
+            joinColumns = @JoinColumn(
+                    name = "homework_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "student_id",
+                    referencedColumnName = "id"
+            )
+    )
+    private List<Student> students;
+
+    public void addStudents(Student student) {
+        if (students == null) students = new ArrayList<>();
+
+        students.add(student);
+    }
 }

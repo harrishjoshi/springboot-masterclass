@@ -1,6 +1,7 @@
 package com.harxsh.spring.data.jpa.repository;
 
 import com.harxsh.spring.data.jpa.entity.Homework;
+import com.harxsh.spring.data.jpa.entity.Student;
 import com.harxsh.spring.data.jpa.entity.Tutor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -105,5 +106,30 @@ class HomeworkRepositoryTest {
                         firstPageTenRecords
                 ).getContent();
         log.info("Homeworks: {}", homeworks);
+    }
+
+    @Test
+    void saveHomeworkWithStudentAndTutor() {
+        Student student = Student.builder()
+                .firstName("Harish")
+                .lastName("Joshi")
+                .email("harxshjoshi@gmail.com")
+                .build();
+
+        Tutor tutor = Tutor.builder()
+                .firstName("Harish")
+                .lastName("Joshi")
+                .build();
+
+        Homework homework = Homework.builder()
+                .title("DevOps")
+                .creditHours(15)
+                .tutor(tutor)
+                .build();
+
+        homework.addStudents(student);
+
+        // save homework
+        homeworkRepository.save(homework);
     }
 }
