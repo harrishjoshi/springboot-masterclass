@@ -1,9 +1,6 @@
 package com.harxsh.spring.data.jpa.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "tbl_homework")
+@ToString(exclude = "tutor")
 public class Homework {
 
     @Id
